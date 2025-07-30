@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="2000" height="2000" viewBox="-1000.0 -1000.0 2000 2000">
+<defs>
+</defs>
+<path d="M0,0 L549.9999999999999,0 L602.1383079930962,219.465384490081 Z" stroke="black" fill="#ffffff" />
+<text x="0" y="0" font-size="8" fill="blue">Nr. 10, 20°</text>
+<text x="274.99999999999994" y="0.0" font-size="8" fill="blue">549mm, 97°</text>
+<text x="301.0691539965481" y="109.7326922450405" font-size="8" fill="blue">640mm, 173°</text>
+<text x="549.9999999999999" y="0" font-size="8" fill="blue">Nr. 9, 76°</text>
+<text x="274.99999999999994" y="0.0" font-size="8" fill="blue">549mm, 97°</text>
+<text x="576.069153996548" y="109.7326922450405" font-size="8" fill="blue">225mm, 90°</text>
+<text x="602.1383079930962" y="219.465384490081" font-size="8" fill="blue">Nr. 3, 56°</text>
+<text x="301.0691539965481" y="109.7326922450405" font-size="8" fill="blue">640mm, 173°</text>
+<text x="576.069153996548" y="109.7326922450405" font-size="8" fill="blue">225mm, 90°</text>
+</svg>

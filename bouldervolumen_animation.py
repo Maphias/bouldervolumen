@@ -3,6 +3,7 @@ from mpl_toolkits.mplot3d import axes3d
 import numpy as np
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from scipy.spatial import ConvexHull
+import drawsvg as draw
 
 
 def normalize(vector):
@@ -149,7 +150,7 @@ def draw_plates (volume):
                                    (points[index_list[0]][1][1] + points[index_list[1]][1][1])/2,
                                    fill='blue')
                         )
-        s.save_svg('example' + str(i) + '.svg')
+        s.save_svg('skew_hex' + str(i) + '.svg')
         i += 1
         s = None
 
@@ -204,6 +205,9 @@ rot = np.array([[1,0,0],
 hex_skew_2 = np.array(generate_polygon(6,1100, 40))- np.array([0,519.615,0])
 hex_skew = np.vstack((hex_skew_1, hex_skew_2 @ rot))
 
+draw_plates(volume(hex_skew))
 animate_3d(hex_skew)
+
+
 #s3d = np.array([[0, 0, 0], [400, 0, 0], [200, 500, np.sqrt(400**2-200**2)/2], [200, 0, np.sqrt(400**2-200**2)]])
 #s3d = np.array([[-1, 0, 0], [1, 0, 0], [0,1,0], [0,-1,0],[0,0,1]])
