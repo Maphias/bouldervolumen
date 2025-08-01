@@ -4,6 +4,8 @@ import numpy as np
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from scipy.spatial import ConvexHull
 import drawsvg as draw
+import matplotlib.animation as animation
+
 
 
 def normalize(vector):
@@ -44,7 +46,7 @@ def edges_volume(points):
 
                 v1 = np.cross(d1[0]-d1[2],d1[1]-d1[2])/ np.linalg.norm(np.cross(d1[0]-d1[2],d1[1]-d1[2]))
                 v2 = np.cross(d2[0]-d2[2],d2[1]-d2[2])/ np.linalg.norm(np.cross(d2[0]-d2[2],d2[1]-d2[2]))
-                alpha = np.arccos(max(min(np.inner(v1,v2), 0),-1)) / (2 * np.pi) * 360
+                alpha = np.arccos(max(min(abs(np.inner(v1,v2)), 1),-1)) / (2 * np.pi) * 360
                 a = edge(s1,d1 ,s2,d2, set(s1).intersection(s2), alpha)
                 plates.append(a)
     return plates
@@ -59,11 +61,12 @@ class edge:
         self.length = np.linalg.norm(self.edge[0][1]-self.edge[1][1])
 
 class corner:
-    def __init__(self, index, coord, adjacent_edges, angle):
+    def __init__(self, index, coord, adjacent_edges, angle, edge_vectors):
         self.index = index
         self.coord = coord
         self.adjacent_edges = adjacent_edges
         self.angle = angle
+        self.edge_vectors = edge_vectors
 
 class plate:
     def __init__(self, indices, coords, corners, area):
@@ -88,11 +91,11 @@ class volume:
                     adj_edges.append(e)
                     edge_vectors.append(next(( x for (k, x) in e.edge if k == j)) - self.simplices.points[i])
                     #print(e.edge_indices)
-                v1 = edge_vectors[0]/np.linalg.norm(edge_vectors[0])
-                v2 = edge_vectors[1]/np.linalg.norm(edge_vectors[1])
+                v1 = normalize(edge_vectors[0])
+                v2 = normalize(edge_vectors[1])
                 angle = np.arccos(max(min(abs(np.inner(v1,v2)),1),-1)) / (2 * np.pi) * 360
                 area = np.linalg.norm(np.cross(edge_vectors[0],edge_vectors[1]))/2
-                corners.append(corner(i,self.simplices.points[i], adj_edges,angle))
+                corners.append(corner(i,self.simplices.points[i], adj_edges,angle,[v1,v2]))
             self.plates.append(plate( s , coords, corners, area))
         self.corners = corners
 
@@ -132,69 +135,60 @@ def draw_plates (volume):
                             close = True,
                             stroke = 'black', fill='#ffffff'
                             ),
-                )
+                 )
         for c in p.corners:
             arr_index = list(p.indices).index(c.index)
-            s.append(draw.Text("Nr. " + str(c.index) + ", " + str(int(c.angle)) + "°",
+            s.append(draw.Text("Nr. " + str(c.index) + ", " + str(round(c.angle,2)) + "°",
                                8,
                                points[arr_index][1][0],
                                points[arr_index][1][1],
                                fill='blue'
-                              )
-                    )
+                               )
+                     )
             for e in c.adjacent_edges:
                 index_list = list([ list(p.indices).index(t) for t in e.edge_indices])
-                s.append(draw.Text(str(int(e.length)) + "mm, " + str(int(e.taper_angle)) + "°",
+                s.append(draw.Text(str(round(e.length,2)) + "mm, " + str(round(e.taper_angle,2)) + "°",
                                    8,
                                    (points[index_list[0]][1][0] + points[index_list[1]][1][0])/2,
                                    (points[index_list[0]][1][1] + points[index_list[1]][1][1])/2,
                                    fill='blue')
-                        )
+                         )
+
         s.save_svg('skew_hex' + str(i) + '.svg')
         i += 1
         s = None
 
 
-#plot_poly(hex_skew)
-def animate_3d (points):
-    fig = plt.figure()
-    ax = fig.add_subplot(projection='3d')
 
-    # Grab some example data and plot a basic wireframe.
-    convex = ConvexHull(points)
+def display (volume):
+    convex = volume.simplices
     simplices_poly = [[ convex.points[i] for i in y ] for y in convex.simplices]
     ax = plt.figure().add_subplot(projection='3d')
     poly = Poly3DCollection(simplices_poly, facecolors='w', edgecolor='b', linewidths=1, alpha=0.9)
     ax.add_collection3d(poly)
 
-
-# Set the axis labels
     ax.set_xlabel('x')
     ax.set_ylabel('y')
     ax.set_zlabel('z')
+    detail1 = True
+    detail2 = False
+    if detail1 == True:
+        for p in volume.plates:
+            for c in p.corners:
+                coord = c.coord + 50 * (c.edge_vectors[0] + c.edge_vectors[1])
+                #ax.plot(coord[0],coord[1],coord[2],'o',linewidth=2,markersize=12)
+                ax.text(coord[0],coord[1],coord[2],str(c.index) + ", " + str(round(c.angle,2)) + "°")
+                if detail2 == True:
+                    for e in c.adjacent_edges:
+                        ax.text((e.edge[0][1][0]+e.edge[1][1][0])/2,
+                                (e.edge[0][1][1]+e.edge[1][1][1])/2,
+                                (e.edge[0][1][2]+e.edge[1][1][2])/2,
+                                str(round(e.length,2)) + "mm, " + str(round(e.taper_angle,2)) + "°"
+                                )
 
-# Rotate the axes and updat:
-    for angle in range(0, 360*4 + 1):
-    # Normalize the angle to the range [-180, 180] for display
-        angle_norm = (angle + 180) % 360 - 180
-
-    # Cycle through a full rotation of elevation, then azimuth, roll, and all
-        elev = azim = roll = 0
-        if angle <= 360:
-            elev = angle_norm
-        elif angle <= 360*2:
-            azim = angle_norm
-        elif angle <= 360*3:
-            roll = angle_norm
-        else:
-            elev = azim = roll = angle_norm
-
-    # Update the axis view and title
-        ax.view_init(elev, azim, roll)
-        plt.title('Elevation: %d°, Azimuth: %d°, Roll: %d°' % (elev, azim, roll))
-        plt.axis('equal')
-        plt.draw()
-        plt.pause(.001)
+    ax.view_init(0,0,0)
+    plt.axis('equal')
+    plt.show()
 
 
 hex_skew_1 = np.array(generate_polygon(6,1200, 0)) - np.array([0,519.615,0])
@@ -205,8 +199,12 @@ rot = np.array([[1,0,0],
 hex_skew_2 = np.array(generate_polygon(6,1100, 40))- np.array([0,519.615,0])
 hex_skew = np.vstack((hex_skew_1, hex_skew_2 @ rot))
 
-draw_plates(volume(hex_skew))
-animate_3d(hex_skew)
+pentagon = np.array(generate_polygon(5,900, 0))
+pentagon = np.vstack((pentagon, np.array([[0,150,200]])))
+
+draw_plates(volume(pentagon))
+#generate_gif(pentagon)
+display(volume(pentagon))
 
 
 #s3d = np.array([[0, 0, 0], [400, 0, 0], [200, 500, np.sqrt(400**2-200**2)/2], [200, 0, np.sqrt(400**2-200**2)]])
