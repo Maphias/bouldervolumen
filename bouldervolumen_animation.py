@@ -4,7 +4,6 @@ import numpy as np
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from scipy.spatial import ConvexHull
 import drawsvg as draw
-import matplotlib.animation as animation
 
 
 
@@ -121,6 +120,8 @@ def parse_volume(volume):
 def draw_plates (volume):
     i = 0
     for p in volume.plates:
+        if [z for [x,y,z] in p.coords] == [0,0,0]:
+            continue
         d = p.coords
         angle = np.arcsin(np.linalg.norm(np.cross(normalize(d[1]-d[0]),normalize(d[2]-d[0]))))
         p3 = [np.linalg.norm(d[2]-d[0]) * np.cos(angle),
@@ -170,7 +171,7 @@ def display (volume):
     ax.set_xlabel('x')
     ax.set_ylabel('y')
     ax.set_zlabel('z')
-    detail1 = True
+    detail1 = False
     detail2 = False
     if detail1 == True:
         for p in volume.plates:
@@ -199,13 +200,25 @@ rot = np.array([[1,0,0],
 hex_skew_2 = np.array(generate_polygon(6,1100, 40))- np.array([0,519.615,0])
 hex_skew = np.vstack((hex_skew_1, hex_skew_2 @ rot))
 
+#hex_skew_1 = np.array(generate_polygon(6,1200, 0))
+#w = 20/360 * 2 * np.pi
+#rot = np.array([[1,0,0],
+#         [0,np.cos(w),-np.sin(w)],
+#         [0,np.sin(w),np.cos(w)]])
+#hex_skew_2 = np.array(generate_polygon(5,1100, 400))
+#hex_skew = np.vstack((hex_skew_1, hex_skew_2))
+
+
+# Dreieckspyramide. Zur anschauung.
+pyramid = np.array([[-1, 0, 0], [1, 0, 0], [0,1,0], [0,-1,0],[0,0,1]])
+
+#draw_plates(volume(pyramid))
+display(volume(pyramid))
+
+
+# Pentagon Fall. Haben wir gebaut
 pentagon = np.array(generate_polygon(5,900, 0))
-pentagon = np.vstack((pentagon, np.array([[0,150,200]])))
+pentagon = np.vstack((pentagon, np.array([[200,0,200]])))
 
-draw_plates(volume(pentagon))
-#generate_gif(pentagon)
+#draw_plates(volume(pentagon))
 display(volume(pentagon))
-
-
-#s3d = np.array([[0, 0, 0], [400, 0, 0], [200, 500, np.sqrt(400**2-200**2)/2], [200, 0, np.sqrt(400**2-200**2)]])
-#s3d = np.array([[-1, 0, 0], [1, 0, 0], [0,1,0], [0,-1,0],[0,0,1]])

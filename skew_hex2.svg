@@ -3,14 +3,14 @@
      width="2000" height="2000" viewBox="-1000.0 -1000.0 2000 2000">
 <defs>
 </defs>
-<path d="M0,0 L430.8700395020709,0 L381.6577015874497,366.3134123904439 Z" stroke="black" fill="#ffffff" />
-<text x="0" y="0" font-size="8" fill="blue">Nr. 2, 43.82°</text>
-<text x="215.43501975103544" y="0.0" font-size="8" fill="blue">430.87mm, 41.4°</text>
-<text x="190.82885079372485" y="183.15670619522194" font-size="8" fill="blue">529.01mm, 42.09°</text>
-<text x="430.8700395020709" y="0" font-size="8" fill="blue">Nr. 5, 82.35°</text>
-<text x="215.43501975103544" y="0.0" font-size="8" fill="blue">430.87mm, 41.4°</text>
-<text x="406.26387054476027" y="183.15670619522194" font-size="8" fill="blue">369.6mm, 43.75°</text>
-<text x="381.6577015874497" y="366.3134123904439" font-size="8" fill="blue">Nr. 1, 53.83°</text>
-<text x="190.82885079372485" y="183.15670619522194" font-size="8" fill="blue">529.01mm, 42.09°</text>
-<text x="406.26387054476027" y="183.15670619522194" font-size="8" fill="blue">369.6mm, 43.75°</text>
+<path d="M0,0 L476.3160096118012,0 L424.3244507150834,315.90643836979507 Z" stroke="black" fill="#ffffff" />
+<text x="0" y="0" font-size="8" fill="blue">Nr. 4, 36.67°</text>
+<text x="238.1580048059006" y="0.0" font-size="8" fill="blue">476.32mm, 42.61°</text>
+<text x="212.1622253575417" y="157.95321918489753" font-size="8" fill="blue">529.01mm, 44.68°</text>
+<text x="476.3160096118012" y="0" font-size="8" fill="blue">Nr. 5, 80.65°</text>
+<text x="238.1580048059006" y="0.0" font-size="8" fill="blue">476.32mm, 42.61°</text>
+<text x="450.32023016344226" y="157.95321918489753" font-size="8" fill="blue">320.16mm, 48.82°</text>
+<text x="424.3244507150834" y="315.90643836979507" font-size="8" fill="blue">Nr. 0, 62.68°</text>
+<text x="212.1622253575417" y="157.95321918489753" font-size="8" fill="blue">529.01mm, 44.68°</text>
+<text x="450.32023016344226" y="157.95321918489753" font-size="8" fill="blue">320.16mm, 48.82°</text>
 </svg>
